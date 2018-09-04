@@ -35,15 +35,16 @@ var dxCam = 0.01;
 var myCameraman;
 
 interpolateCameramanPos = function(out) {
-	ffbomesh.camera.position.x = out.posx*xCam + (1-xCam) * startPosition.x + noiseCam.x;
-	ffbomesh.camera.position.y = out.posy*xCam + (1-xCam) * startPosition.y + noiseCam.y;
-	ffbomesh.camera.position.z = out.posz*xCam + (1-xCam) * startPosition.z + noiseCam.z; 	
-	ffbomesh.controls.target.x = out.tarx*xCam +  (1-xCam) * startTarget.x; 
-	ffbomesh.controls.target.y = out.tary*xCam +  (1-xCam) * startTarget.y; 
-	ffbomesh.controls.target.z = out.tarz*xCam +  (1-xCam) * startTarget.z; 
-	ffbomesh.controls.object.up.x = out.upx*xCam +  (1-xCam) * startUp.x; 
-	ffbomesh.controls.object.up.y = out.upy*xCam  +  (1-xCam) * startUp.y; 
-	ffbomesh.controls.object.up.z = out.upz*xCam +  (1-xCam) * startUp.z; 
+	var intCam = 1-(Math.cos(xCam*Math.PI)+1)/2;
+	ffbomesh.camera.position.x = out.posx*intCam + (1-intCam) * startPosition.x + noiseCam.x;
+	ffbomesh.camera.position.y = out.posy*intCam + (1-intCam) * startPosition.y + noiseCam.y;
+	ffbomesh.camera.position.z = out.posz*intCam + (1-intCam) * startPosition.z + noiseCam.z; 	
+	ffbomesh.controls.target.x = out.tarx*intCam +  (1-intCam) * startTarget.x; 
+	ffbomesh.controls.target.y = out.tary*intCam +  (1-intCam) * startTarget.y; 
+	ffbomesh.controls.target.z = out.tarz*intCam +  (1-intCam) * startTarget.z; 
+	ffbomesh.controls.object.up.x = out.upx*intCam +  (1-intCam) * startUp.x; 
+	ffbomesh.controls.object.up.y = out.upy*intCam  +  (1-intCam) * startUp.y; 
+	ffbomesh.controls.object.up.z = out.upz*intCam +  (1-intCam) * startUp.z; 
 }
 
 clearCameraman = function() {
@@ -118,14 +119,14 @@ updateCameraman = function() {
 	xCam = Math.min(1.0, xCam + dxCam);
 	if (xCam == 1)
 	{
-		console.log('Cameraman: Selecting new move...');
+		//console.log('Cameraman: Selecting new move...');
 		//thetaCam = 190/180*Math.PI; 
-		xCam = 0;
-		dxCam = [0.005,0.01,0.01,0.015,0.02].sample();
 		startTarget = ffbomesh.controls.target.clone();
 		startPosition = ffbomesh.camera.position.clone();
 		startUp = ffbomesh.controls.object.up.clone();
 		sampleCameramanMove();
+		dxCam = [0.005,0.01,0.01,0.015].sample();
+		xCam = 0;
 	}
 }
 
@@ -138,3 +139,4 @@ startCameraman = function() {
 };
 
 startCameraman();
+
